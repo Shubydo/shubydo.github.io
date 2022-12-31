@@ -4,12 +4,17 @@ on:
   push:
     branches:
       - main
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+    paths-ignore:
+      - "CHANGELOG.md"
+      - "README.md"
+
+  release:
+    types:
+      - published
 
 env:
   NODE_VERSION: 19.2.0
-  SITE_URL: "https://shubydo.github.io"
+  SITE_URL: "https://shubydo.com"
 
 jobs:
   deploy:
