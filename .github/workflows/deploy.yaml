@@ -13,7 +13,7 @@ on:
       - published
 
 env:
-  NODE_VERSION: 20.6.1
+  NODE_VERSION_FILE: .nvmrc
   SITE_URL: "https://shubydo.com"
 
 jobs:
@@ -26,22 +26,12 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        name: Setup Node
+      - uses: ./actions/install_dependencies
         with:
-          node-version: ${{ env.NODE_VERSION }}
-      - uses: actions/cache@v2
-        name: Cache node modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - run: |
-          yarn install
-        name: "yarn install"
-      - run: |
+          node-version-file: ${{ env.NODE_VERSION_FILE }}
+
+      - name: "Deploy to GitHub Pages"
+        run: |
           echo "Configuring git for deployment"
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -49,4 +39,3 @@ jobs:
 
           echo "Deploying to GitHub Pages..."
           yarn deploy
-        name: "Deploy to GitHub Pages"
